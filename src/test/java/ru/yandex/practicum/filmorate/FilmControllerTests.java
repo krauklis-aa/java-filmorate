@@ -2,12 +2,13 @@ package ru.yandex.practicum.filmorate;
 
 import java.time.LocalDate;
 
-import main.ru.yandex.practicum.filmorate.controller.FilmController;
-import main.ru.yandex.practicum.filmorate.model.Film;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
+import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.model.Film;
 
 @SpringBootTest(classes = FilmController.class)
 class FilmControllerTests {
