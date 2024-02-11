@@ -7,10 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
 
-@SpringBootTest(classes = FilmController.class)
+@SpringBootTest()
 class FilmControllerTests {
     WebTestClient webTestClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080/films").build();
 
