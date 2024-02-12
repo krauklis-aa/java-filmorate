@@ -4,14 +4,15 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import ru.yandex.practicum.filmorate.model.User;
 
-@SpringBootTest()
+@SpringBootTest(classes = FilmorateApplication.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 class UserControllerTests {
-    WebTestClient webTestClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080/users").build();
+    private WebTestClient webTestClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080/users").build();
 
     @Test
     void emailValidation_ifNull_shouldBeStatus500() {
