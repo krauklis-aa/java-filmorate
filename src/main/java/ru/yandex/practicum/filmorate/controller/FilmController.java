@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -27,7 +28,7 @@ public class FilmController {
     @PostMapping()
     public Film create(@RequestBody Film film) {
         validate(film);
-        film.setId(++id);
+        film.setId(generateId());
         films.put(film.getId(), film);
         return film;
     }
@@ -37,7 +38,7 @@ public class FilmController {
     public Film update(@RequestBody Film film) {
         int filmId = film.getId();
         if (!films.containsKey(filmId)) {
-            throw new ValidationException(String.format("Фильм с id %d не найден", filmId));
+            throw new NotFoundException(String.format("Фильм с id %d не найден", filmId));
         }
         validate(film);
         films.put(filmId, film);
@@ -67,5 +68,9 @@ public class FilmController {
         if (film.getDuration() <= 0) {
             throw new ValidationException("Продолжительность фильма должна быть положительной");
         }
+    }
+
+    private int generateId() {
+        return ++id;
     }
 }

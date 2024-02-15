@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -27,7 +28,7 @@ public class UserController {
     @PostMapping()
     public User create(@RequestBody User user) {
         validate(user);
-        user.setId(++id);
+        user.setId(generateId());
         users.put(user.getId(), user);
         return user;
     }
@@ -37,7 +38,7 @@ public class UserController {
     public User update(@RequestBody User user) {
         int userId = user.getId();
         if (!users.containsKey(userId)) {
-            throw new ValidationException(String.format("Пользователь с id %d не найден", userId));
+            throw new NotFoundException(String.format("Пользователь с id %d не найден", userId));
         }
         validate(user);
         users.put(userId, user);
@@ -58,8 +59,13 @@ public class UserController {
         }
 
         String login = user.getLogin();
-        if (login == null || login.isBlank() || login.contains(" ")) {
-            throw new ValidationException("Логин не должен быть пустым или содержать пробелы");
+        if (login == null || login.isBlank()) {
+            throw new ValidationException("Логин не должен быть пустым");
+        }
+
+        login = user.getLogin().trim();
+        if (login.contains(" ")) {
+            throw new ValidationException("Логин не должен содержать пробелы");
         }
 
         if (user.getName() == null || user.getName().isBlank()) {
@@ -69,6 +75,9 @@ public class UserController {
         if (user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("День рождения не может быть в будущем");
         }
+    }
 
+    private int generateId() {
+        return ++id;
     }
 }
