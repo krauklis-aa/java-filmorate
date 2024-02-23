@@ -1,32 +1,21 @@
 package ru.yandex.practicum.filmorate;
 
 import java.time.LocalDate;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest()
 class UserControllerTests {
+
     UserController userController = new UserController();
-
-    private static Validator validator;
-
-    static {
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        validator = validatorFactory.usingContext().getValidator();
-    }
 
     @Test
     void emailValidation_ifNull_shouldThrowValidationException() {
@@ -36,11 +25,13 @@ class UserControllerTests {
             .birthday(LocalDate.of(1990, 1, 1))
             .build();
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(
-            violations.isEmpty(),
+        ValidationException e = assertThrows(
+            ValidationException.class,
+            () -> userController.validate(user),
             "Не прошла валидация емейла, если его нет"
         );
+
+        assertEquals("Email не может быть пустым и должен содержать @", e.getMessage());
     }
 
     @Test
@@ -52,11 +43,13 @@ class UserControllerTests {
             .birthday(LocalDate.of(1990, 1, 1))
             .build();
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(
-            violations.isEmpty(),
+        ValidationException e = assertThrows(
+            ValidationException.class,
+            () -> userController.validate(user),
             "Не прошла валидация емейла, если он состоит из пробелов"
         );
+
+        assertEquals("Email не может быть пустым и должен содержать @", e.getMessage());
     }
 
     @Test
@@ -68,11 +61,13 @@ class UserControllerTests {
             .birthday(LocalDate.of(1990, 1, 1))
             .build();
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(
-            violations.isEmpty(),
+        ValidationException e = assertThrows(
+            ValidationException.class,
+            () -> userController.validate(user),
             "Не прошла валидация емейла, если он не содержит @"
         );
+
+        assertEquals("Email не может быть пустым и должен содержать @", e.getMessage());
     }
 
     @Test
@@ -83,11 +78,13 @@ class UserControllerTests {
             .birthday(LocalDate.of(1990, 1, 1))
             .build();
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(
-            violations.isEmpty(),
+        ValidationException e = assertThrows(
+            ValidationException.class,
+            () -> userController.validate(user),
             "Не прошла валидация логина, если его нет"
         );
+
+        assertEquals("Логин не должен быть пустым", e.getMessage());
     }
 
     @Test
@@ -99,11 +96,13 @@ class UserControllerTests {
             .birthday(LocalDate.of(1990, 1, 1))
             .build();
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(
-            violations.isEmpty(),
+        ValidationException e = assertThrows(
+            ValidationException.class,
+            () -> userController.validate(user),
             "Не прошла валидация логина, если он состоит из пустой строки"
         );
+
+        assertEquals("Логин не должен быть пустым", e.getMessage());
     }
 
     @Test
@@ -115,14 +114,13 @@ class UserControllerTests {
             .birthday(LocalDate.of(1990, 1, 1))
             .build();
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(
-            violations.isEmpty(),
+        ValidationException e = assertThrows(
+            ValidationException.class,
+            () -> userController.validate(user),
             "Не прошла валидация логина, если он содержит пробелы"
         );
 
-        violations.stream().map(v -> v.getInvalidValue())
-            .forEach(System.out::println);
+        assertEquals("Логин не должен содержать пробелы", e.getMessage());
     }
 
     @Test
@@ -146,10 +144,12 @@ class UserControllerTests {
             .birthday(LocalDate.of(2446, 8, 20))
             .build();
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(
-            violations.isEmpty(),
+        ValidationException e = assertThrows(
+            ValidationException.class,
+            () -> userController.validate(user),
             "Не прошла валидация дня рождения, если он в будущем"
         );
+
+        assertEquals("День рождения не может быть в будущем", e.getMessage());
     }
 }
