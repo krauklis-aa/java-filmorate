@@ -9,6 +9,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ru.yandex.practicum.filmorate.controller.UserController;
@@ -19,11 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest()
 class UserControllerTests {
-    UserController userController = new UserController();
+    UserController userController;
 
     private static Validator validator;
 
-    static {
+    @Autowired
+    public UserControllerTests(UserController userController) {
+        this.userController = userController;
+
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.usingContext().getValidator();
     }
@@ -133,7 +137,7 @@ class UserControllerTests {
             .birthday(LocalDate.of(1990, 1, 1))
             .build();
 
-        userController.validate(user);
+        userController.create(user);
         assertEquals(user.getLogin(), user.getName(), "Не подставился логин в поле имя, если оно было пустым");
     }
 

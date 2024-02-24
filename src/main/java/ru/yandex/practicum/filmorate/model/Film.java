@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -30,4 +32,16 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private int duration;
+    private final Set<Integer> usersWhoLiked = new HashSet<>();
+    private int likes;
+
+    public void addLike(int userId) {
+        usersWhoLiked.add(userId);
+        likes++;
+    }
+
+    public void deleteLike(int userId) {
+        usersWhoLiked.remove(userId);
+        likes--;
+    }
 }
