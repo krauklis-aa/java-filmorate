@@ -19,7 +19,8 @@ public class InMemoryUserStorage implements UserStorage {
         validate(user);
         user.setId(generateId());
         users.put(user.getId(), user);
-        return user;    }
+        return user;
+    }
 
     @Override
     public User update(User user) {
@@ -29,7 +30,8 @@ public class InMemoryUserStorage implements UserStorage {
         }
         validate(user);
         users.put(userId, user);
-        return user;    }
+        return user;
+    }
 
     @Override
     public List<User> getAll() {
