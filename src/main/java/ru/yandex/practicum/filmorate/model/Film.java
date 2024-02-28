@@ -33,15 +33,16 @@ public class Film {
     @Positive
     private int duration;
     private final Set<Integer> usersWhoLiked = new HashSet<>();
-    private int likes;
 
     public void addLike(int userId) {
         usersWhoLiked.add(userId);
-        likes++;
     }
 
     public void deleteLike(int userId) {
         usersWhoLiked.remove(userId);
-        likes--;
+    }
+
+    public int getLikes() {
+        return usersWhoLiked.size();
     }
 }

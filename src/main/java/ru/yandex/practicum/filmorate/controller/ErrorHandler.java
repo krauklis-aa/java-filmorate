@@ -14,25 +14,28 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationError(final MethodArgumentNotValidException e) {
+    public ErrorResponse handleValidationException(final MethodArgumentNotValidException e) {
         return new ErrorResponse(
-            e.getMessage()
+            e.getMessage(),
+            HttpStatus.BAD_REQUEST
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundError(final NotFoundException e) {
+    public ErrorResponse handleNotFoundException(final NotFoundException e) {
         return new ErrorResponse(
-            e.getMessage()
+            e.getMessage(),
+            HttpStatus.NOT_FOUND
         );
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleOther(final Throwable e) {
         return new ErrorResponse(
-            e.getMessage()
+            e.getMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
 }

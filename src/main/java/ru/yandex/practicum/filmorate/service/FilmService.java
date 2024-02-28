@@ -10,54 +10,58 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 @Service
 public class FilmService {
-    private final FilmStorage storage;
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
+
 
     @Autowired
-    public FilmService(FilmStorage storage) {
-        this.storage = storage;
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+        this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
     }
 
     public void addLike(int id, int userId) {
-        Film film = storage.getById(id);
+        Film film = filmStorage.getById(id);
 
-        if (userId <= 0) {
-            throw new NotFoundException("Неверный userId");
+        if (userId <= 0 || userStorage.getById(userId) == null) {
+            throw new NotFoundException(String.format("Неверный userId: %d", userId));
         }
         film.addLike(userId);
     }
 
     public void deleteLike(int id, int userId) {
-        Film film = storage.getById(id);
+        Film film = filmStorage.getById(id);
 
-        if (userId <= 0) {
-            throw new NotFoundException("Неверный userId");
+        if (userId <= 0 || userStorage.getById(userId) == null) {
+            throw new NotFoundException(String.format("Неверный userId: %d", userId));
         }
         film.deleteLike(userId);
     }
 
     public List<Film> getPopular(int count) {
-        return storage.getAll().stream()
+        return filmStorage.getAll().stream()
             .sorted(Comparator.comparingInt(Film::getLikes).reversed())
             .limit(count)
             .collect(Collectors.toList());
     }
 
     public Film create(Film film) {
-        return storage.create(film);
+        return filmStorage.create(film);
     }
 
     public Film update(Film film) {
-        return storage.update(film);
+        return filmStorage.update(film);
     }
 
     public List<Film> getAll() {
-        return storage.getAll();
+        return filmStorage.getAll();
     }
 
     public Film getById(int id) {
-        return storage.getById(id);
+        return filmStorage.getById(id);
     }
 }
