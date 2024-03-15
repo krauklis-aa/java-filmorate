@@ -31,6 +31,7 @@ public class User {
     @PastOrPresent
     private LocalDate birthday;
     private final Set<Integer> friends = new HashSet<>();
+    private String friendshipState;
 
     public void addFriend(Integer id) {
         friends.add(id);

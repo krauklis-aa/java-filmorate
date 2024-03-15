@@ -32,6 +32,8 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private int duration;
+    private String genre;
+    private String rating;
     private final Set<Integer> usersWhoLiked = new HashSet<>();
 
     public void addLike(int userId) {
